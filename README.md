@@ -1,50 +1,98 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 🩺 MenoMap - Menopause Management App
 
-## Get started
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Expo](https://img.shields.io/badge/Expo-React%20Native-blue)](https://expo.dev/) [![React Navigation](https://img.shields.io/badge/React%20Navigation-6.x-brightgreen)](https://reactnavigation.org/)  
 
-1. Install dependencies
+**MenoMap** is an AI-assisted mobile application that helps women **track, manage, and understand their menopause journey**. Log symptoms, follow diet plans, track relief, and get doctor-ready reports – all in one app.
 
-   ```bash
-   npm install
-   ```
+## 🚀 Features
 
-2. Start the app
+### Core Features (MVP)
+- **Home Dashboard** – Quick access to symptoms, cycles, brain fog logs  
+- **Symptom Tracker** – Log daily symptoms and view history  
+- **PCOS Mode** – Track PCOS-specific symptoms with recommendations  
+- **Relief Tracker** – Monitor relief from treatments (Yoga, herbal teas, etc.)  
+- **Diet Planner** – Region-specific diet recommendations  
+- **Symptom Coach** – AI-powered suggestions based on logged symptoms  
+- **Settings** – Manage profile, notifications, and app info  
 
-   ```bash
-   npx expo start
-   ```
+### Stretch Features
+- Cycle timeline and trend charts  
+- Doctor-ready report generation (PDF / CSV)  
+- Cloud sync & Firebase backend  
+- Advanced AI symptom prediction and insights  
 
-In the output, you'll find options to open the app in a
+## 🛠 Tech Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Frontend:** React Native, Expo  
+- **Navigation:** React Navigation (Bottom Tabs & Stack)  
+- **UI Components:** React Native Paper  
+- **Charts:** react-native-chart-kit  
+- **State Management:** React Hooks & AsyncStorage  
+- **Backend (Optional):** Firebase  
+- **AI/ML:** Symptom pattern analysis  
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 💻 Setup & Installation
 
-## Get a fresh project
+# Clone repository
+git clone https://github.com/yourusername/MenoMapApp.git
+cd MenoMapApp
 
-When you're ready, run:
+# Install dependencies
+npm install
 
-```bash
-npm run reset-project
-```
+# Start development server
+npx expo start
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Open the app using:
 
-## Learn more
+* iOS Simulator (Mac only)
+* Android Emulator
+* Expo Go app on mobile
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📂 Folder Structure (Key Files)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+/app
+  /components        # Reusable UI components (SymptomCard, ChartCard)
+  /navigation        # RootNavigator.js, AppNavigator.js
+  /screens           # Screens grouped by feature
+    /Home
+    /PCOS
+    /Coach
+    /Diet
+    /Reports
+    /Auth
+  App.js             # Entry point
 
-## Join the community
 
-Join our community of developers creating universal apps.
+## 👩‍💻 Team Roles
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Team Member | Role                  | Responsibilities                          |
+| ----------- | --------------------- | ----------------------------------------- |
+| Nishita     | Frontend Lead         | UI, screens, navigation, charts           |
+| Aditi       | AI/ML Lead            | Symptom analysis, AI recommendations      |
+| Mrunmai     | Backend / Integration | Data storage, Firebase, report generation |
+| Documenter  | Documentation         | README, reports, deployment instructions  |
+
+
+## 📆 Development Timeline (3 Weeks)
+
+| Week | Goals                                                                 |
+| ---- | --------------------------------------------------------------------- |
+| 1    | Core screens, navigation, symptom tracker MVP                         |
+| 2    | PCOS Mode, Relief Tracker, Settings, basic charts, ML integration     |
+| 3    | UI polish, bug fixes, optional features (doctor reports, advanced AI) |
+
+
+## 🔮 Future Enhancements
+
+* Predictive symptom patterns using AI
+* Multi-device cloud sync
+* Interactive health reminders & notifications
+* Export reports (PDF / Excel)
+* Advanced dietary recommendations
+
+## 📄 License
+
+This project is **MIT licensed**. See `LICENSE` for details.
+
