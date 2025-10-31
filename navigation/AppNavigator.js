@@ -1,107 +1,108 @@
-// navigation/AppNavigator.js
+// AppNavigator.js
 import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// Screens
-import OnboardingScreen from "../screens/Auth/OnboardingScreen";
-import LoginScreen from "../screens/Auth/LoginScreen";
-import RegisterScreen from "../screens/Auth/RegisterScreen";
+// --- Screens ---
+import SplashScreen from "../screens/SplashScreen";
+import WelcomeScreen from "../screens/WelcomeScreen";
+import OnboardingScreen from "../screens/OnboardingScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import HomeScreen from "../screens/HomeScreen";
 
-import HomeScreen from "../screens/Home/HomeScreen";
-import RegionalDietPlannerScreen from "../screens/Diet/RegionalDietPlannerScreen";
-import SymptomCoachScreen from "../screens/Coach/SymptomCoachScreen";
-import ReliefTrackerScreen from "../screens/Reports/ReliefTrackerScreen";
-import PcosModeScreen from "../screens/PCOS/PcosModeScreen";
-import SymptomTrackerScreen from "../screens/Home/SymptomTrackerScreen";
-import BrainFogLogScreen from "../screens/Home/BrainFogLogScreen";
-import CycleTimelineScreen from "../screens/Home/CycleTimelineScreen";
-import DoctorReportScreen from "../screens/Reports/DoctorReportsScreen";
-import SettingsScreen from "../screens/Settings/SettingsScreen";
+// --- Features ---
+import ReliefTrackerScreen from "../screens/reports/ReliefTrackerScreen";
+import BrainFogMemoryFogScreen from "../screens/BrainFogMemoryFogScreen";
+import CycleIrregularityTimelineScreen from "../screens/CycleIrregularityTimelineScreen";
+import DoctorConsultationPrepScreen from "../screens/DoctorConsultationPrepScreen";
+import DoctorConsultationRoomScreen from "../screens/DoctorConsultationRoomScreen";
 
-// Stack & Tabs
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
-// Bottom Tabs
-function MainTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#FF8FAB",
-        tabBarInactiveTintColor: "#FFC2D1",
-        tabBarStyle: { backgroundColor: "#FFE5EC", height: 60, paddingBottom: 5 },
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Diet"
-        component={RegionalDietPlannerScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="food-apple" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Coach"
-        component={SymptomCoachScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="robot" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Reports"
-        component={ReliefTrackerScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="file-document" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="PCOS"
-        component={PcosModeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="heart-pulse" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
-// Root Stack
 export default function AppNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* Onboarding & Auth */}
-      <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SplashScreen">
+        {/* Pre-Home / Auth */}
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="WelcomeScreen"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OnboardingScreen"
+          component={OnboardingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{ title: "Login" }}
+        />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
+          options={{ title: "Register" }}
+        />
 
-      {/* Main App Tabs */}
-      <Stack.Screen name="MainTabs" component={MainTabs} />
+        {/* Profile setup */}
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{ title: "Your Profile" }}
+        />
 
-      {/* Additional screens accessible via navigation */}
-      <Stack.Screen name="SymptomTrackerScreen" component={SymptomTrackerScreen} />
-      <Stack.Screen name="BrainFogLogScreen" component={BrainFogLogScreen} />
-      <Stack.Screen name="CycleTimelineScreen" component={CycleTimelineScreen} />
-      <Stack.Screen name="DoctorReportScreen" component={DoctorReportScreen} />
-      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-    </Stack.Navigator>
+        {/* Main Home */}
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+
+        {/* Relief Tracker */}
+        <Stack.Screen
+          name="ReliefTrackerScreen"
+          component={ReliefTrackerScreen}
+          options={{ title: "Relief Tracker" }}
+        />
+
+        {/* BrainFogMemoryFogScreen */}
+        <Stack.Screen
+          name="BrainFogMemoryFogScreen"
+          component={BrainFogMemoryFogScreen}
+          options={{ title: "Brain & Memory Fog" }}
+        />
+
+        {/* CycleIrregularityTimelineScreen */}
+        <Stack.Screen
+          name="CycleIrregularityTimelineScreen"
+          component={CycleIrregularityTimelineScreen}
+          options={{ title: "Cycle Irregularity Timeline" }}
+        />
+
+        <Stack.Screen
+        name="DoctorConsultationPrepScreen"
+        component={DoctorConsultationPrepScreen}
+        options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+        name="DoctorConsultationRoomScreen"
+        component={DoctorConsultationRoomScreen}
+        options={{ headerShown: false }}
+        />
+
+        
+
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
