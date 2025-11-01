@@ -18,6 +18,9 @@ import BrainFogMemoryFogScreen from "../screens/BrainFogMemoryFogScreen";
 import CycleIrregularityTimelineScreen from "../screens/CycleIrregularityTimelineScreen";
 import DoctorConsultationPrepScreen from "../screens/DoctorConsultationPrepScreen";
 import DoctorConsultationRoomScreen from "../screens/DoctorConsultationRoomScreen";
+import DietPlannerScreen from "../screens/DietPlannerScreen";
+import SymptomTrackerScreen from "../screens/SymptomTrackerScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -99,7 +102,17 @@ export default function AppNavigator() {
         options={{ headerShown: false }}
         />
 
-        
+       <Stack.Screen
+        name="DietPlannerScreen"
+        component={DietPlannerScreen}
+        options={{ headerShown: false }}
+        />  
+
+       <Stack.Screen
+        name="SymptomTrackerScreen"
+        component={SymptomTrackerScreen}
+        options={{ headerShown: false }}
+        />
 
 
       </Stack.Navigator>

@@ -4,9 +4,9 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const features = [
-  { id: "1", title: "Menopause Transition Predictor", desc: "Track your transition stage" },
+  { id: "1", title: "SymptomTrackerScreen", desc: "Track your transition stage" },
   { id: "2", title: "AI Symptom Coach", desc: "Get AI guidance for symptoms" },
-  { id: "3", title: "Regional Diet Planner", desc: "Personalized meal plans" },
+  { id: "3", title: "Diet Planner", desc: "Personalized meal plans" },
   { id: "4", title: "Relief Tracker", desc: "Track what helps you feel better" },
   { id: "5", title: "Brain Fog Tracker", desc: "Monitor mental clarity" },
   { id: "6", title: "Cycle Irregularity Timeline", desc: "Log & predict your cycles" },
@@ -19,9 +19,9 @@ export default function HomeScreen({ navigation }) {
       style={styles.card}
       onPress={() => {
         switch (item.id) {
-          case "1": navigation.navigate("MenopauseTransitionPredictorScreen"); break;
+          case "1": navigation.navigate("SymptomTrackerScreen"); break;
           case "2": navigation.navigate("AISymptomCoachScreen"); break;
-          case "3": navigation.navigate("RegionalDietPlannerScreen"); break;
+          case "3": navigation.navigate("DietPlannerScreen"); break;
           case "4": navigation.navigate("ReliefTrackerScreen"); break;
           case "5": navigation.navigate("BrainFogMemoryFogScreen"); break;
           case "6": navigation.navigate("CycleIrregularityTimelineScreen"); break;
