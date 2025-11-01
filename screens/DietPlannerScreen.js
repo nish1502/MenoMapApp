@@ -9,7 +9,9 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  SafeAreaView, // <-- Added for layout
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient'; // <-- Added for gradient
 
 // Helper component for our new inputs
 const LabeledInput = ({ label, value, onChangeText, placeholder, keyboardType = "default" }) => (
@@ -20,47 +22,39 @@ const LabeledInput = ({ label, value, onChangeText, placeholder, keyboardType = 
       value={value}
       onChangeText={onChangeText}
       style={styles.input}
+      placeholderTextColor="#999" // Added placeholder color
       keyboardType={keyboardType}
     />
   </View>
 );
 
 export default function DietPlanScreen() {
-  // --- 1. STATE IS NOW MORE COMPLEX ---
-  // Basic Info
+  // --- 1. STATE (Unchanged) ---
   const [age, setAge] = useState("42");
-  const [mood, setMood] = useState("stressed"); // e.g., stressed, moderate, calm
-  const [preference, setPreference] = useState("Vegetarian"); // e.g., Vegetarian, Non-Vegetarian
-
-  // Symptoms (as severities 0, 1, or 2)
+  const [mood, setMood] = useState("stressed");
+  const [preference, setPreference] = useState("Vegetarian"); 
   const [symptomHotFlashes, setSymptomHotFlashes] = useState("2");
   const [symptomAcne, setSymptomAcne] = useState("1");
   const [symptomFatigue, setSymptomFatigue] = useState("2");
   const [symptomBrainFog, setSymptomBrainFog] = useState("1");
-
-  // Extra Info (for the 'extra' object)
-  const [region, setRegion] = useState("South"); // e.g., South, North, East/West
-  const [bmiCategory, setBmiCategory] = useState("overweight"); // e.g., overweight, normal
+  const [region, setRegion] = useState("South");
+  const [bmiCategory, setBmiCategory] = useState("overweight");
   const [cycleEncoded, setCycleEncoded] = useState("2");
   const [stageEncoded, setStageEncoded] = useState("1");
-  const [remedies, setRemedies] = useState("PCOS Tea, Spearmint Supplement"); // Comma-separated
-
-  // App State
+  const [remedies, setRemedies] = useState("PCOS Tea, Spearmint Supplement"); 
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // --- 2. generatePlan Function (Unchanged) ---
   const generatePlan = async () => {
     setLoading(true);
     setPlan(null);
 
-    // --- 2. BUILD THE CORRECT JSON PAYLOAD ---
     const symptomsPayload = {
-      // These keys MUST match the ones in _build_feature_vector_from_request
       "hot_flashes": parseInt(symptomHotFlashes) || 0,
       "acne": parseInt(symptomAcne) || 0,
       "fatigue_severity_pcos": parseInt(symptomFatigue) || 0,
       "brain_fog": parseInt(symptomBrainFog) || 0,
-      // 💡 Add other symptoms here as needed
     };
 
     const extraPayload = {
@@ -68,14 +62,13 @@ export default function DietPlanScreen() {
       "bmi_category": bmiCategory,
       "cycle_regularity_encoded": parseInt(cycleEncoded) || 0,
       "self_reported_stage_encoded": parseInt(stageEncoded) || 0,
-      // 💡 Add other 'extra' fields here
     };
 
     const body = {
-      "user_id": "react-native-user", // Example user_id
+      "user_id": "react-native-user",
       "age": parseInt(age) || 0,
       "mood": mood,
-      "remedies": remedies.split(',').map(r => r.trim()), // Split comma-separated string into array
+      "remedies": remedies.split(',').map(r => r.trim()),
       "preferences": [preference],
       "symptoms": symptomsPayload,
       "extra": extraPayload
@@ -95,7 +88,6 @@ export default function DietPlanScreen() {
       const data = await response.json();
       console.log("🟢 API Response:", data);
 
-      // --- 3. PARSE THE NEW RESPONSE ---
       if (data.week_plan && Array.isArray(data.week_plan)) {
         setPlan(data.week_plan);
       } else if (data.error) {
@@ -111,11 +103,10 @@ export default function DietPlanScreen() {
     }
   };
 
-  // --- 4. RENDER THE NEW PLAN STRUCTURE (WITH FIXES) ---
+  // --- 3. Render Functions (Unchanged) ---
   const renderPlanItem = ({ item }) => (
     <View style={styles.mealCard}>
       <Text style={styles.mealType}>{item.type}</Text>
-      {/* 💡 FIX: Add check for item.details to prevent crash if data is missing */}
       <Text style={styles.mealText}>
         {item.details ? item.details.replace(/\\n/g, '\n') : 'Not available'}
       </Text>
@@ -123,12 +114,10 @@ export default function DietPlanScreen() {
   );
 
   const renderDay = ({ item }) => {
-    // 'item' is now { day: "Monday", Remedy: "...", Breakfast: "...", ... }
     const meals = [
       { type: "Remedy", details: item.Remedy || "Not available" },
       { type: "Breakfast", details: item.Breakfast || "Not available" },
       { type: "Lunch", details: item.Lunch || "Not available" },
-      // 💡 FIX: Use correct key "Evening Snacks" and provide fallback
       { type: "Evening Snacks", details: item["Evening Snacks"] || "Not available" },
       { type: "Dinner", details: item.Dinner || "Not available" },
     ];
@@ -140,84 +129,109 @@ export default function DietPlanScreen() {
           data={meals}
           keyExtractor={(meal) => meal.type}
           renderItem={renderPlanItem}
+          scrollEnabled={false} // <-- Disable inner scroll
         />
       </View>
     );
   };
 
+  // --- 4. RENDER (Updated with Gradient) ---
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>🥗 Adaptive Diet Planner</Text>
-      
-      {/* --- 5. UPDATED UI --- */}
-      <View style={styles.formContainer}>
-        <Text style={styles.sectionTitle}>User Profile</Text>
-        <LabeledInput label="Age" value={age} onChangeText={setAge} placeholder="e.g., 42" keyboardType="numeric" />
-        <LabeledInput label="Mood" value={mood} onChangeText={setMood} placeholder="e.g., stressed, calm" />
-        <LabeledInput label="Diet Preference" value={preference} onChangeText={setPreference} placeholder="e.g., Vegetarian" />
-        <LabeledInput label="Remedies" value={remedies} onChangeText={setRemedies} placeholder="e.g., PCOS Tea, Spearmint" />
+    <LinearGradient
+      colors={['#FFF0F5', '#E6E6FA']} // Soft Pink to Lavender
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.title}>🥗 Adaptive Diet Planner</Text>
+          
+          <View style={styles.formContainer}>
+            <Text style={styles.sectionTitle}>User Profile</Text>
+            <LabeledInput label="Age" value={age} onChangeText={setAge} placeholder="e.g., 42" keyboardType="numeric" />
+            <LabeledInput label="Mood" value={mood} onChangeText={setMood} placeholder="e.g., stressed, calm" />
+            <LabeledInput label="Diet Preference" value={preference} onChangeText={setPreference} placeholder="e.g., Vegetarian" />
+            <LabeledInput label="Remedies" value={remedies} onChangeText={setRemedies} placeholder="e.g., PCOS Tea, Spearmint" />
 
-        <Text style={styles.sectionTitle}>Symptoms (Severity 0-2)</Text>
-        <LabeledInput label="Hot Flashes" value={symptomHotFlashes} onChangeText={setSymptomHotFlashes} keyboardType="numeric" />
-        <LabeledInput label="Acne" value={symptomAcne} onChangeText={setSymptomAcne} keyboardType="numeric" />
-        <LabeledInput label="Fatigue" value={symptomFatigue} onChangeText={setSymptomFatigue} keyboardType="numeric" />
-        <LabeledInput label="Brain Fog" value={symptomBrainFog} onChangeText={setSymptomBrainFog} keyboardType="numeric" />
+            <Text style={styles.sectionTitle}>Symptoms (Severity 0-2)</Text>
+            <LabeledInput label="Hot Flashes" value={symptomHotFlashes} onChangeText={setSymptomHotFlashes} keyboardType="numeric" />
+            <LabeledInput label="Acne" value={symptomAcne} onChangeText={setSymptomAcne} keyboardType="numeric" />
+            <LabeledInput label="Fatigue" value={symptomFatigue} onChangeText={setSymptomFatigue} keyboardType="numeric" />
+            <LabeledInput label="Brain Fog" value={symptomBrainFog} onChangeText={setSymptomBrainFog} keyboardType="numeric" />
 
-        {/* 💡 FIX: Replaced ' with &apos; to fix linting error */}
-        <Text style={styles.sectionTitle}>Extra Details (from &apos;extra&apos; obj)</Text>
-        <LabeledInput label="Region" value={region} onChangeText={setRegion} placeholder="e.g., South, North" />
-        <LabeledInput label="BMI Category" value={bmiCategory} onChangeText={setBmiCategory} placeholder="e.g., overweight, normal" />
-        <LabeledInput label="Cycle (Encoded)" value={cycleEncoded} onChangeText={setCycleEncoded} keyboardType="numeric" />
-        <LabeledInput label="Stage (Encoded)" value={stageEncoded} onChangeText={setStageEncoded} keyboardType="numeric" />
-      </View>
+            <Text style={styles.sectionTitle}>Extra Details (from &apos;extra&apos; obj)</Text>
+            <LabeledInput label="Region" value={region} onChangeText={setRegion} placeholder="e.g., South, North" />
+            <LabeledInput label="BMI Category" value={bmiCategory} onChangeText={setBmiCategory} placeholder="e.g., overweight, normal" />
+            <LabeledInput label="Cycle (Encoded)" value={cycleEncoded} onChangeText={setCycleEncoded} keyboardType="numeric" />
+            <LabeledInput label="Stage (Encoded)" value={stageEncoded} onChangeText={setStageEncoded} keyboardType="numeric" />
+          </View>
 
-      <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={generatePlan}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Generate Plan</Text>
-        )}
-      </TouchableOpacity>
+          {/* --- UPDATED BUTTON --- */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={generatePlan}
+            disabled={loading}
+          >
+            <LinearGradient
+              colors={loading ? ['#ccc', '#ccc'] : ['#C792C7', '#A076A0']} // Purple Gradient
+              style={styles.buttonGradient}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Generate Plan</Text>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
 
-      {plan && (
-        <FlatList
-          data={plan}
-          keyExtractor={(item) => item.day}
-          renderItem={renderDay}
-          contentContainerStyle={{ paddingBottom: 40 }}
-        />
-      )}
-    </ScrollView>
+          {plan && (
+            <FlatList
+              data={plan}
+              keyExtractor={(item) => item.day}
+              renderItem={renderDay}
+              contentContainerStyle={{ paddingBottom: 40 }}
+              scrollEnabled={false} // <-- Disable inner scroll
+            />
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
+// --- 5. STYLES (Updated to MenoMap Theme) ---
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    flex: 1, // Full screen
+  },
+  scrollContainer: {
     padding: 20,
+    paddingBottom: 60,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#3a3a3a",
+    color: "#333", // Darker text
   },
   formContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Soft white card
+    borderRadius: 15,
+    padding: 20,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#4a8f54",
-    marginTop: 15,
-    marginBottom: 10,
+    color: "#A076A0", // Theme Purple
+    marginTop: 10,
+    marginBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#E6E6FA", // Lavender
     paddingBottom: 5,
   },
   inputGroup: {
@@ -231,30 +245,38 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingVertical: 10,
+    borderColor: "#E0E0E0", // Light grey
+    borderRadius: 10,
+    paddingVertical: 12,
     paddingHorizontal: 12,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fff", // Solid white
+    fontSize: 16,
+    color: '#333',
   },
   button: {
-    backgroundColor: "#5DB075",
-    borderRadius: 8,
-    padding: 14,
-    alignItems: "center",
+    borderRadius: 30, // Rounded pill shape
+    height: 56,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
-  buttonDisabled: {
-    backgroundColor: "#a5d8b5",
+  buttonGradient: {
+    borderRadius: 30,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: 'center',
+    height: '100%',
   },
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
   },
   dayCard: {
-    backgroundColor: "#f4f9f4",
-    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 15,
     padding: 15,
     marginBottom: 15,
     shadowColor: "#000",
@@ -266,7 +288,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#4a8f54",
+    color: "#A076A0", // Theme Purple
   },
   mealCard: {
     backgroundColor: "#fff",
@@ -274,7 +296,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e0e0e0"
+    borderColor: "#E6E6FA" // Lavender border
   },
   mealType: {
     fontSize: 16,

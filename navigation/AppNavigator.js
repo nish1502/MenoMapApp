@@ -13,7 +13,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
 
 // --- Features ---
-import ReliefTrackerScreen from "../screens/reports/ReliefTrackerScreen";
+import ReliefTrackerScreen from "../screens/ReliefTrackerScreen";
 import BrainFogMemoryFogScreen from "../screens/BrainFogMemoryFogScreen";
 import CycleIrregularityTimelineScreen from "../screens/CycleIrregularityTimelineScreen";
 import DoctorConsultationPrepScreen from "../screens/DoctorConsultationPrepScreen";
