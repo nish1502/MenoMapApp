@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const features = [
-  { id: "1", title: "SymptomTrackerScreen", desc: "Track your transition stage" },
+  { id: "1", title: "Symptom Tracker Screen", desc: "Track your transition stage" },
   { id: "2", title: "AI Symptom Coach", desc: "Get AI guidance for symptoms" },
   { id: "3", title: "Diet Planner", desc: "Personalized meal plans" },
   { id: "4", title: "Relief Tracker", desc: "Track what helps you feel better" },

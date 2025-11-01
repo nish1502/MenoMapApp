@@ -33,7 +33,9 @@ const SymptomSlider = ({ label, value, onValueChange }) => {
         maximumValue={10}
         step={1}
         value={value}
-        onValueVChange={onValueChange}
+        // --- THIS IS THE FIX ---
+        onValueChange={onValueChange} 
+        // ----------------------
         minimumTrackTintColor="#C792C7"
         maximumTrackTintColor="#F0F0F0"
         thumbTintColor="#A076A0"
@@ -100,6 +102,8 @@ const SymptomTrackerScreen = ({ navigation }) => {
       notes: notes,
     };
 
+    console.log("Sending to /predict_menopause_stage:", JSON.stringify(logData, null, 2));
+
     try {
       const response = await fetch(`${API_URL}/predict_menopause_stage`, {
         method: 'POST',
@@ -108,6 +112,8 @@ const SymptomTrackerScreen = ({ navigation }) => {
       });
 
       const jsonResponse = await response.json();
+      console.log("Received from /predict_menopause_stage:", jsonResponse);
+
 
       if (response.ok) {
         setApiResult(jsonResponse);
@@ -154,18 +160,23 @@ const SymptomTrackerScreen = ({ navigation }) => {
     setIsLoading(true);
     const { target_symptom_key, current_severity_ternary } = getWorstSymptom();
 
+    const remedyPayload = { 
+      log_id: latestLogId,
+      user_id: userId,
+      target_symptom_key: target_symptom_key,
+      current_severity_ternary: current_severity_ternary
+    };
+
+    console.log("Sending to /get_remedy:", JSON.stringify(remedyPayload, null, 2));
+
     try {
       const response = await fetch(`${API_URL}/get_remedy`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            log_id: latestLogId,
-            user_id: userId,
-            target_symptom_key: target_symptom_key,
-            current_severity_ternary: current_severity_ternary
-        }),
+        body: JSON.stringify(remedyPayload),
       });
       const json = await response.json();
+      console.log("Received from /get_remedy:", json);
       
       if (response.ok) {
         setRemedyResult(json); // Save the full remedy object
@@ -185,14 +196,18 @@ const SymptomTrackerScreen = ({ navigation }) => {
     setRemedyModalVisible(false); // Close the modal
     if (!latestHistoryId) return; // Don't do anything if we don't have a history_id
 
+    const feedbackPayload = {
+      history_id: latestHistoryId,
+      was_effective: wasEffective,
+    };
+
+    console.log("Sending to /log_remedy_feedback:", JSON.stringify(feedbackPayload, null, 2));
+
     try {
       await fetch(`${API_URL}/log_remedy_feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          history_id: latestHistoryId,
-          was_effective: wasEffective,
-        }),
+        body: JSON.stringify(feedbackPayload),
       });
       Alert.alert("Feedback Saved", "Thank you! Your insights help us learn.");
     } catch (e) {
