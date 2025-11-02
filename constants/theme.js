@@ -1,3 +1,4 @@
+// constants/theme.js
 import { DefaultTheme } from "react-native-paper";
 
 const theme = {
@@ -14,10 +15,5 @@ const theme = {
     notification: "#FB6F92",
   },
 };
-
-// --- ADD THIS LINE ---
-// CRITICAL: Make sure this is your computer's IP address
-export const API_URL = 'http://192.168.29.18:5001'; 
-// ---------------------
 
 export default theme;

@@ -6,8 +6,6 @@ DB_FILE = "menomap.db"
 
 def get_db_connection() -> Connection:
     conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-    # --- NEW: Enable Foreign Key support ---
-    conn.execute("PRAGMA foreign_keys = ON")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -15,21 +13,7 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # --- NEW: Users table for Auth ---
-    # This is the central table for all users
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS users (
-            user_id TEXT PRIMARY KEY,
-            email TEXT UNIQUE NOT NULL,
-            name TEXT NOT NULL,
-            password_hash TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    
-    # --- Existing table for Diet Planner (NOW LINKED) ---
+    # --- Existing table for Diet Planner ---
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS user_data (
@@ -40,14 +24,15 @@ def init_db():
             preferences TEXT,
             mood TEXT,
             extra_json TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
         """
     )
     
-    # --- User Profile Table (NOW LINKED) ---
+    # --- 1. NEW: User Profile Table ---
     # Stores the features from final_feature_names.pkl
+    # This is a sample; you MUST add all profile features here
+    # that your relief model needs (from final_feature_names.pkl).
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS user_profile (
             user_id TEXT PRIMARY KEY,
@@ -68,13 +53,13 @@ def init_db():
             avoided_soy INTEGER,
             remedy_cinnamonwater INTEGER,
             remedy_fenugreekseeds INTEGER,
-            age_group_simplified_younger_than_40 INTEGER,
+            age_group_simplified_younger_than_40 INTEGER
             -- ... ADD ALL OTHER FEATURES FROM final_feature_names.pkl ...
-            FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
         )
     ''')
 
-    # --- Symptom Logs Table (NOW LINKED) ---
+    # --- 2. NEW: Symptom Logs Table ---
+    # Stores the user's daily tracker entries (0-10 scale)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS symptom_logs (
             log_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,65 +72,30 @@ def init_db():
             sleep_issues INTEGER,
             brain_fog INTEGER,
             notes TEXT,
-            FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+            FOREIGN KEY (user_id) REFERENCES user_profile (user_id)
         )
     ''')
 
-    # --- Remedy History Table (NOW LINKED) ---
+    # --- 3. NEW: Remedy History Table ---
+    # Stores recommendations and user feedback
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS remedy_history (
             history_id INTEGER PRIMARY KEY AUTOINCREMENT,
             log_id INTEGER NOT NULL,
             user_id TEXT NOT NULL,
-            target_symptom TEXT,
-            remedy_recommended TEXT,
-            effectiveness INTEGER DEFAULT -1,
+            target_symptom TEXT,         -- e.g., 'hot_flashes_severity_ternary'
+            remedy_recommended TEXT,     -- e.g., 'turmericmilk'
+            effectiveness INTEGER DEFAULT -1,  -- -1=Pending, 0=Ineffective, 1=Effective
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (log_id) REFERENCES symptom_logs (log_id) ON DELETE CASCADE,
-            FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+            FOREIGN KEY (log_id) REFERENCES symptom_logs (log_id),
+            FOREIGN KEY (user_id) REFERENCES user_profile (user_id)
         )
     ''')
     
     conn.commit()
     conn.close()
 
-# --- NEW: Auth Helper Functions ---
-
-def create_user(user_id: str, email: str, name: str, password_hash: str):
-    """Creates a new user in the users table."""
-    conn = get_db_connection()
-    try:
-        conn.execute(
-            "INSERT INTO users (user_id, email, name, password_hash) VALUES (?, ?, ?, ?)",
-            (user_id, email, name, password_hash)
-        )
-        conn.commit()
-    except sqlite3.IntegrityError:
-        conn.close()
-        raise ValueError(f"Email {email} or user_id {user_id} already exists.")
-    conn.close()
-
-def get_user_by_email(email: str) -> Optional[sqlite3.Row]:
-    """Fetches a user by their email."""
-    conn = get_db_connection()
-    row = conn.execute(
-        "SELECT * FROM users WHERE email = ?",
-        (email,)
-    ).fetchone()
-    conn.close()
-    return row
-
-def get_user_by_id(user_id: str) -> Optional[sqlite3.Row]:
-    """Fetches a user by their user_id."""
-    conn = get_db_connection()
-    row = conn.execute(
-        "SELECT * FROM users WHERE user_id = ?",
-        (user_id,)
-    ).fetchone()
-    conn.close()
-    return row
-
-# --- Existing Functions (Unchanged, but now linked by DB) ---
+# --- Existing Functions for Diet Planner ---
 
 def insert_user_data(user_id: str, age: Optional[int], symptoms: str,
                      preferences: str, mood: Optional[str], extra_json: Optional[str] = None):
@@ -166,10 +116,20 @@ def get_latest_user_record(user_id: str):
     conn.close()
     return row
 
+# --- NEW Functions for Symptom Tracker & Relief Recommender ---
+
 def insert_user_profile(user_id: str, profile_data: Dict[str, Any]):
+    """
+    Inserts or updates a user's base profile.
+    This is the data used by the relief recommender.
+    NOTE: This is a simple version. A robust version would
+    dynamically build the query based on all columns.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
     
+    # For this example, we'll use the sample columns from CREATE TABLE
+    # In production, you'd build this query dynamically
     columns = [
         'stress_level_encoded', 'self_reported_stage_encoded', 'cycle_regularity_encoded',
         'flow_intensity_encoded', 'exercise_frequency_wk', 'age_group_simplified_40_49',
@@ -179,8 +139,11 @@ def insert_user_profile(user_id: str, profile_data: Dict[str, Any]):
         'remedy_cinnamonwater', 'remedy_fenugreekseeds', 'age_group_simplified_younger_than_40'
     ]
     
+    # Build query parts
     col_names_str = ", ".join(columns)
     placeholders_str = ", ".join(["?"] * len(columns))
+    
+    # Prepare data, using None for missing keys
     values = [profile_data.get(col) for col in columns]
     
     cursor.execute(
@@ -192,6 +155,9 @@ def insert_user_profile(user_id: str, profile_data: Dict[str, Any]):
     conn.close()
 
 def get_user_profile(user_id: str) -> Optional[Dict[str, Any]]:
+    """
+    Fetches a user's base profile as a dictionary.
+    """
     conn = get_db_connection()
     row = conn.execute(
         "SELECT * FROM user_profile WHERE user_id = ?",
@@ -200,11 +166,16 @@ def get_user_profile(user_id: str) -> Optional[Dict[str, Any]]:
     conn.close()
     
     if row:
+        # Convert sqlite3.Row to a dictionary
         return dict(row)
     return None
 
 def insert_symptom_log(user_id: str, log_date: str, predicted_stage: str, 
                        symptoms: Dict[str, Any]) -> int:
+    """
+    Inserts a daily symptom log and returns the new log_id.
+    'symptoms' is the raw data from the app (e.g., {'hot_flashes': 7, ...})
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
@@ -224,12 +195,16 @@ def insert_symptom_log(user_id: str, log_date: str, predicted_stage: str,
         )
     )
     conn.commit()
-    log_id = cursor.lastrowid
+    log_id = cursor.lastrowid # Get the ID of the log we just inserted
     conn.close()
     return log_id
 
 def insert_remedy_recommendation(log_id: int, user_id: str, target_symptom: str, 
                                 remedy_recommended: str) -> int:
+    """
+    Logs that a remedy was recommended (feedback is pending).
+    Returns the new history_id.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
@@ -246,6 +221,9 @@ def insert_remedy_recommendation(log_id: int, user_id: str, target_symptom: str,
     return history_id
 
 def update_remedy_feedback(history_id: int, effectiveness_score: int):
+    """
+    Updates a remedy log with the user's feedback (0 or 1).
+    """
     conn = get_db_connection()
     conn.execute(
         "UPDATE remedy_history SET effectiveness = ? WHERE history_id = ?",
