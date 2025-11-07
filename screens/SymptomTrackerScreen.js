@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiConfig';
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -16,7 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 // --- Configuration ---
-const API_URL = 'http://192.168.29.18:5001'; // Base URL for your API
+//const API_URL = 'http://10.187.204.118:5001'; // Base URL for your API
 // ---------------------
 
 // A reusable component for each symptom slider

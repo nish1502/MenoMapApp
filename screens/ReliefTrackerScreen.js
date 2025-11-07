@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiConfig';
 import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
@@ -15,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // Run: npm install react-native-chart-kit
 
 // --- Configuration ---
-const API_URL = 'http://192.168.29.18:5001'; // Base URL
+//const API_URL = 'http://10.187.204.118:5001'; // Base URL
 const USER_ID = 'nishita_test_user'; // Get this from your auth state
 // ---------------------
 

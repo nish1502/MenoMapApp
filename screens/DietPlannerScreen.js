@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiConfig';
 import React, { useState } from "react";
 import {
   View,
@@ -77,7 +78,7 @@ export default function DietPlanScreen() {
     console.log("Sending payload:", JSON.stringify(body, null, 2));
 
     try {
-      const response = await fetch("http://192.168.29.18:5001/recommend", {
+      const response = await fetch(`${API_URL}/recommend`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
