@@ -125,9 +125,9 @@ export default function HomeScreen({ navigation }) {
           <Icon name="home" size={24} color={COLORS.accent} />
           <Text style={[styles.navText, { color: COLORS.accent }]}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("ReliefTrackerScreen")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("DoctorConsultationPrepScreen")}>
           <Icon name="analytics-outline" size={24} color={COLORS.textSecondary} />
-          <Text style={styles.navText}>Reports</Text>
+          <Text style={styles.navText}>Contact Doc</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("ProfileScreen")}>
           <Icon name="person-outline" size={24} color={COLORS.textSecondary} />
