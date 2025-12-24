@@ -71,7 +71,6 @@ Open the app using:
 | ----------- | --------------------- | ----------------------------------------- |
 | Nishita     | Frontend Lead         | UI, screens, navigation, charts           |
 | Aditi       | AI/ML Lead            | Symptom analysis, AI recommendations      |
-| Mrunmai     | Backend / Integration | Data storage, Firebase, report generation |
 | Documenter  | Documentation         | README, reports, deployment instructions  |
 
 
