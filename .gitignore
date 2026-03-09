@@ -1,39 +1,20 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
 node_modules/
-
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
-
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
+__pycache__/
+*.db
+.env
+.ipynb_checkpoints
 .DS_Store
-*.pem
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-
-app-example
+.expo/
+android/
+ios/
+dist/
+build/
+*.log
+docs/*.log
+figures/*.png
+ml_models/*.pkl
+ml_models/Relief_Efficacy_Models/*.pkl
+# Keep samples but ignore large data
+datasets_sample/DATA_RAW/
+datasets_sample/ONBOARDING_DATA_PROCESSED/
+datasets_sample/DIET_DATA_PROCESSED/

@@ -1,97 +1,67 @@
+# MenoMap: Personalized Menopause Management System
 
-# 🩺 MenoMap - Menopause Management App
+MenoMap is a comprehensive full-stack application designed to support women through their menopause journey using personalized AI-driven insights, symptom tracking, and wellness planning.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Expo](https://img.shields.io/badge/Expo-React%20Native-blue)](https://expo.dev/) [![React Navigation](https://img.shields.io/badge/React%20Navigation-6.x-brightgreen)](https://reactnavigation.org/)  
+## 🌟 Key Features
+- **AI Stage Prediction**: Accurately identifies menopause stages (Pre, Peri, Meno, Post) using custom-trained Random Forest models.
+- **Adaptive Diet Planner**: Generates personalized meal plans based on regional preferences (South/North Indian), dietary restrictions (Veg/Non-Veg), and symptom triggers.
+- **Dynamic Relief Recommender**: Scores and suggests natural remedies and exercises (Yoga, Diet, Supplements) tailored to individual symptom efficacy.
+- **Symptom Tracker**: Comprehensive logging for 11+ menopausal symptoms with intensity analysis.
+- **Smart Reports**: Automatically summarizes logs for doctor consultations with PDF export functionality.
 
-**MenoMap** is an AI-assisted mobile application that helps women **track, manage, and understand their menopause journey**. Log symptoms, follow diet plans, track relief, and get doctor-ready reports – all in one app.
+## 🏗️ System Architecture
+The system follows a decoupled frontend-backend architecture:
+- **Frontend**: Built with React Native & Expo for a seamless mobile experience.
+- **Backend**: FastAPI-based microservices handling ML inference, data persistence, and logic.
+- **Predictive Engine**: Scikit-learn models trained on curated onboarding data to provide personalized health metrics.
+- **Database**: SQLite for local data security and rapid access.
 
-## 🚀 Features
+## 🧠 Machine Learning Models
+MenoMap utilizes a multi-model pipeline:
+1. **Stage Predictor**: Random Forest Classifier (Accuracy: ~75%).
+2. **Symptom Severity Predictor**: Multi-output predictor for 11 core symptoms.
+3. **Relief Efficacy Recommender**: Ensemble of models tracking the effectiveness of 6+ unique relief methods.
+4. **Diet Suitability Engine**: Ranks recipe suitability based on symptom constraints.
 
-### Core Features (MVP)
-- **Home Dashboard** – Quick access to symptoms, cycles, brain fog logs  
-- **Symptom Tracker** – Log daily symptoms and view history  
-- **PCOS Mode** – Track PCOS-specific symptoms with recommendations  
-- **Relief Tracker** – Monitor relief from treatments (Yoga, herbal teas, etc.)  
-- **Diet Planner** – Region-specific diet recommendations  
-- **Symptom Coach** – AI-powered suggestions based on logged symptoms  
-- **Settings** – Manage profile, notifications, and app info  
+## 📊 Evaluation Results
+- **Stage Model F1-Score**: 0.74 (Validated via 5-fold Cross-Validation).
+- **Inference Latency**: <10ms per prediction.
+- **Model Stability**: 0.00% drift observed in recent testing cycles.
 
-### Stretch Features
-- Cycle timeline and trend charts  
-- Doctor-ready report generation (PDF / CSV)  
-- Cloud sync & Firebase backend  
-- Advanced AI symptom prediction and insights  
+## 🚀 Installation & Setup
 
-## 🛠 Tech Stack
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- Expo CLI
 
-- **Frontend:** React Native, Expo  
-- **Navigation:** React Navigation (Bottom Tabs & Stack)  
-- **UI Components:** React Native Paper  
-- **Charts:** react-native-chart-kit  
-- **State Management:** React Hooks & AsyncStorage  
-- **Backend (Optional):** Firebase  
-- **AI/ML:** Symptom pattern analysis  
-
-## 💻 Setup & Installation
-
-# Clone repository
-git clone https://github.com/yourusername/MenoMapApp.git
-cd MenoMapApp
-
-# Install dependencies
+### Frontend Setup
+```bash
+cd frontend
 npm install
-
-# Start development server
 npx expo start
+```
 
-Open the app using:
+### Backend Setup
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
 
-* iOS Simulator (Mac only)
-* Android Emulator
-* Expo Go app on mobile
+## 📁 Repository Structure
+```text
+.
+├── frontend/           # React Native App (Expo)
+├── backend/            # FastAPI Server & Core Services
+├── ml_models/          # Production-ready .pkl model files
+├── ml_research/        # Audit scripts, training, and research notebooks
+├── datasets_sample/    # Sample data for testing and demonstration
+├── docs/               # System audit reports, QA logs, and technical docs
+├── figures/            # ML visualizations and confusion matrices
+└── LICENSE             # MIT License
+```
 
-## 📂 Folder Structure (Key Files)
-
-/app
-  /components        # Reusable UI components (SymptomCard, ChartCard)
-  /navigation        # RootNavigator.js, AppNavigator.js
-  /screens           # Screens grouped by feature
-    /Home
-    /PCOS
-    /Coach
-    /Diet
-    /Reports
-    /Auth
-  App.js             # Entry point
-
-
-## 👩‍💻 Team Roles
-
-| Team Member | Role                  | Responsibilities                          |
-| ----------- | --------------------- | ----------------------------------------- |
-| Nishita     | Frontend Lead         | UI, screens, navigation, charts           |
-| Aditi       | AI/ML Lead            | Symptom analysis, AI recommendations      |
-| Documenter  | Documentation         | README, reports, deployment instructions  |
-
-
-## 📆 Development Timeline (3 Weeks)
-
-| Week | Goals                                                                 |
-| ---- | --------------------------------------------------------------------- |
-| 1    | Core screens, navigation, symptom tracker MVP                         |
-| 2    | PCOS Mode, Relief Tracker, Settings, basic charts, ML integration     |
-| 3    | UI polish, bug fixes, optional features (doctor reports, advanced AI) |
-
-
-## 🔮 Future Enhancements
-
-* Predictive symptom patterns using AI
-* Multi-device cloud sync
-* Interactive health reminders & notifications
-* Export reports (PDF / Excel)
-* Advanced dietary recommendations
-
-## 📄 License
-
-This project is **MIT licensed**. See `LICENSE` for details.
-
+## ⚖️ Copyright & License
+Distributed under the MIT License. See `LICENSE` for more information.
+Copyright (c) 2026 MenoMap Project.

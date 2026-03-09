@@ -1,0 +1,8 @@
+Model,Accuracy,F1 Score
+Stage Predictor,0.7059,0.7094
+Relief: Yoga,0.9091,0.9063
+Relief: Turmericmilk,0.9167,0.9169
+Relief: Aloeverajuice,0.96,0.959
+Relief: Cinnamonwater,0.9062,0.9045
+Relief: Cardio,0.8333,0.8338
+Relief: Fenugreekseeds,0.9024,0.9018
