@@ -22,7 +22,7 @@ Evaluation of the MENOMAP predictive pipeline.
 ## 4. Visualizations
 
 ### Stage Predictor: Confusion Matrix
-![CM](ML_REPORT_FIGURES/cm_stage_predictor.png)
+![Confusion Matrix](../figures/ML_AUDIT_FIGURES/stage_confusion_matrix.png)
 
 ## 5. API Performance
 - **Average Latency**: 0.0040 seconds

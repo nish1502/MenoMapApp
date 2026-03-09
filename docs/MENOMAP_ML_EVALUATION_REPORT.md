@@ -7,8 +7,10 @@
 - F1 Score: 0.7094
 
 ### Visualizations
-![Confusion Matrix](ML_AUDIT_FIGURES/stage_confusion_matrix.png)
-![Feature Importance](ML_AUDIT_FIGURES/stage_feature_importance.png)
+
+![Confusion Matrix](../figures/ML_AUDIT_FIGURES/stage_confusion_matrix.png)
+
+![Feature Importance](../figures/ML_AUDIT_FIGURES/stage_feature_importance.png)
 
 ### Cross-Validation (5-Fold)
 | Metric | Value |
