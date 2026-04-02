@@ -18,7 +18,8 @@ export default function PCOSCoachScreen({ route }) {
   const [loading, setLoading] = useState(false);
 
   // 🔑 Add your OpenRouter API key here
-  const OPENROUTER_API_KEY = "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";
+  const OPENROUTER_API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
+
 
   useEffect(() => {
     if (!selectedSymptoms || !selectedSymptoms.length) return;

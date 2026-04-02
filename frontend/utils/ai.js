@@ -1,7 +1,8 @@
 // utils/ai.js
 import axios from "axios";
 
-const OPENROUTER_API_KEY = "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"; // replace with your actual key
+const OPENROUTER_API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY; // Using env var for safety
+
 
 export async function getSymptomAdvice(symptoms) {
   if (!symptoms || symptoms.length === 0) return ["No symptoms selected."];
