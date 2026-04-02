@@ -12,7 +12,6 @@ build/
 *.log
 docs/*.log
 figures/*.png
-ml_models/*.pkl
-ml_models/Relief_Efficacy_Models/*.pkl
+
 # datasets_sample included fully as per request
 
